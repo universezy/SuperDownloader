@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">SuperDownloader</string>
+
+    <string name="main_button_new">New Task</string>
+    <string name="main_button_current">Current Task</string>
+    <string name="main_button_history">History Task</string>
+    <string name="main_button_exit">Exit</string>
+
+    <string name="new_button_return">Return</string>
+    <string name="new_button_download">Download</string>
+    <string name="new_hint_url">Url</string>
+    <string name="new_hint_link">Link</string>
+    <string name="new_hint_file">File</string>
+    <string name="new_button_url">Paste</string>
+    <string name="new_button_link">Paste</string>
+    <string name="new_button_file">Choose</string>
+
+</resources>
