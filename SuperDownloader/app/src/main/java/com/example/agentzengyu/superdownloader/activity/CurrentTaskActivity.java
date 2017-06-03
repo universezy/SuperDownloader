@@ -8,6 +8,9 @@ import android.view.View;
 import com.example.agentzengyu.superdownloader.R;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 
+/**
+ * 当前任务
+ */
 public class CurrentTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private SuperDownloaderApp superDownloaderApp = null;
 
@@ -25,10 +28,16 @@ public class CurrentTaskActivity extends AppCompatActivity implements View.OnCli
         super.onDestroy();
     }
 
+    /**
+     * 初始化布局
+     */
     private void initView() {
         findViewById(R.id.btnReturn).setOnClickListener(this);
     }
 
+    /**
+     * 设置变量
+     */
     private void setVariable() {
         superDownloaderApp = (SuperDownloaderApp) getApplication();
         superDownloaderApp.addActivityToList(this);

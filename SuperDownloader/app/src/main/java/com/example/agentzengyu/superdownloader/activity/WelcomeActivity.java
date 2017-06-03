@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import com.example.agentzengyu.superdownloader.R;
 
+/**
+ * 欢迎页面
+ */
 public class WelcomeActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable runnable;
@@ -17,15 +20,21 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         initView();
-        initVariable();
+        setVariable();
         setAction();
     }
 
+    /**
+     * 初始化布局
+     */
     private void initView() {
 
     }
 
-    private void initVariable() {
+    /**
+     * 初始化变量
+     */
+    private void setVariable() {
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -37,6 +46,9 @@ public class WelcomeActivity extends AppCompatActivity {
         };
     }
 
+    /**
+     * 设置动作
+     */
     private void setAction() {
         handler.postDelayed(runnable, 2000);
     }

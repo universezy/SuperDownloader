@@ -10,7 +10,7 @@
     <string name="new_button_download">Download</string>
     <string name="new_hint_url">Url</string>
     <string name="new_hint_link">Link</string>
-    <string name="new_hint_file">File</string>
+    <string name="new_hint_torrent">Torrent</string>
     <string name="new_button_url">Paste</string>
     <string name="new_button_link">Paste</string>
     <string name="new_button_file">Choose</string>

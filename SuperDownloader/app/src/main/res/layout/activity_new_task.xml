@@ -95,14 +95,14 @@
             android:layout_weight="8">
 
             <EditText
-                android:id="@+id/etFile"
+                android:id="@+id/etTorrent"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:hint="@string/new_hint_file" />
+                android:hint="@string/new_hint_torrent" />
 
             <Button
-                android:id="@+id/btnChooseFile"
+                android:id="@+id/btnChooseTorrent"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
@@ -126,6 +126,7 @@
                 android:background="@mipmap/ic_launcher_round" />
 
             <EditText
+                android:id="@+id/etWebsite"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
