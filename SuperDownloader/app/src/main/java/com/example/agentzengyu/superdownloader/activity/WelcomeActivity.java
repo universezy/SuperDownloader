@@ -21,23 +21,23 @@ public class WelcomeActivity extends AppCompatActivity {
         setAction();
     }
 
-    private void initView(){
+    private void initView() {
 
     }
 
-    private void initVariable(){
+    private void initVariable() {
         handler = new Handler();
         runnable = new Runnable() {
             @Override
             public void run() {
-                Intent intentMainActivity = new Intent(WelcomeActivity.this,MainActivity.class);
+                Intent intentMainActivity = new Intent(WelcomeActivity.this, MainActivity.class);
                 startActivity(intentMainActivity);
                 finish();
             }
         };
     }
 
-    private void setAction(){
-        handler.postDelayed(runnable,2000);
+    private void setAction() {
+        handler.postDelayed(runnable, 2000);
     }
 }
