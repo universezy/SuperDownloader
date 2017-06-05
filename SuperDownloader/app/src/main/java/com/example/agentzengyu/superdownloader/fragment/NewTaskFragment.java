@@ -1,12 +1,13 @@
-package com.example.agentzengyu.superdownloader.activity;
+package com.example.agentzengyu.superdownloader.fragment;
 
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -21,59 +22,51 @@ import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 /**
  * 新建任务
  */
-public class NewTaskActivity extends AppCompatActivity implements View.OnClickListener {
+public class NewTaskFragment extends Fragment implements View.OnClickListener {
     private SuperDownloaderApp superDownloaderApp = null;
 
     private EditText metUrl, metLink, metTorrent, metWebsite;
     private WebView webView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_task);
+    public NewTaskFragment(){
 
-        initView();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_new_task, null);
+        superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
+        initView(view);
         setVariable();
+        return view;
     }
 
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            metTorrent.setText(data.getData().toString());
-        }
-        super.onActivityReenter(resultCode, data);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 
     /**
      * 初始化布局
      */
-    private void initView() {
-        findViewById(R.id.btnReturn).setOnClickListener(this);
-        findViewById(R.id.btnDownload).setOnClickListener(this);
-        findViewById(R.id.btnPasteUrl).setOnClickListener(this);
-        findViewById(R.id.btnPasteLink).setOnClickListener(this);
-        findViewById(R.id.btnChooseTorrent).setOnClickListener(this);
-        findViewById(R.id.btnBack).setOnClickListener(this);
-        findViewById(R.id.btnEnter).setOnClickListener(this);
-        metUrl = (EditText) findViewById(R.id.etUrl);
-        metLink = (EditText) findViewById(R.id.etLink);
-        metTorrent = (EditText) findViewById(R.id.etTorrent);
-        metWebsite = (EditText) findViewById(R.id.etWebsite);
-        webView = (WebView) findViewById(R.id.webview);
+    private void initView(View view) {
+        view.findViewById(R.id.btnDownload).setOnClickListener(this);
+        view.findViewById(R.id.btnPasteUrl).setOnClickListener(this);
+        view.findViewById(R.id.btnPasteLink).setOnClickListener(this);
+        view.findViewById(R.id.btnChooseTorrent).setOnClickListener(this);
+        view.findViewById(R.id.btnBack).setOnClickListener(this);
+        view.findViewById(R.id.btnEnter).setOnClickListener(this);
+        metUrl = (EditText) view.findViewById(R.id.etUrl);
+        metLink = (EditText) view.findViewById(R.id.etLink);
+        metTorrent = (EditText) view.findViewById(R.id.etTorrent);
+        metWebsite = (EditText) view.findViewById(R.id.etWebsite);
+        webView = (WebView) view.findViewById(R.id.webview);
     }
 
     /**
      * 设置变量
      */
     private void setVariable() {
-        superDownloaderApp = (SuperDownloaderApp) getApplication();
-        superDownloaderApp.addActivityToList(this);
-
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
@@ -106,18 +99,18 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
         String stringLink = metLink.getText().toString().trim();
         String stringTorrent = metTorrent.getText().toString().trim();
         if ("".equals(stringUrl) && "".equals(stringLink) && "".equals(stringTorrent)) {
-            Toast.makeText(this, "Nothing to download.", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Nothing to download.", Toast.LENGTH_SHORT).show();
         } else if (!"".equals(stringUrl) && "".equals(stringLink) && "".equals(stringTorrent)) {
             superDownloaderApp.getService().startNewTaskByUrl(stringUrl);
         } else if ("".equals(stringUrl) && !"".equals(stringLink) && "".equals(stringTorrent)) {
             superDownloaderApp.getService().startNewTaskByLink(stringLink);
         } else if ("".equals(stringUrl) && "".equals(stringLink) && !"".equals(stringTorrent)) {
             if (!stringTorrent.toLowerCase().endsWith(".torrent")) {
-                Toast.makeText(this, "Wrong file type!", Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), "Wrong file type!", Toast.LENGTH_SHORT).show();
             }
             superDownloaderApp.getService().startNewTaskByTorrent(Uri.parse(stringTorrent));
         } else {
-            Toast.makeText(this, "Only one task allowed to execute.", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Only one task allowed to execute.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -128,7 +121,7 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
      */
     private String getClipBoardContext() {
         String context = "";
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboardManager.hasPrimaryClip())
             context = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
         return context;
@@ -137,10 +130,6 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnReturn:
-                Intent intentReturn = new Intent(this, MainActivity.class);
-                startActivity(intentReturn);
-                break;
             case R.id.btnDownload:
                 download();
                 break;
@@ -151,8 +140,7 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
                 metLink.setText(getClipBoardContext());
                 break;
             case R.id.btnChooseTorrent:
-                Intent intentChooser = new Intent(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intentChooser, 1);
+
                 break;
             case R.id.btnBack:
                 webView.goBack();
@@ -161,6 +149,8 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
                 String website = metWebsite.getText().toString().trim();
                 if ("".equals(website))
                     return;
+                if (website.toLowerCase().indexOf("http://") != 0)
+                    website = "http://" + website;
                 webView.loadUrl(website);
                 break;
             default:

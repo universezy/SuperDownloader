@@ -2,6 +2,7 @@ package com.example.agentzengyu.superdownloader.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
 import com.example.agentzengyu.superdownloader.activity.MainActivity;
 import com.example.agentzengyu.superdownloader.service.DownloadService;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Agent ZengYu on 2017/6/2.
+ * Created by ZengYu on 2017/6/2.
  */
 
 /**
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class SuperDownloaderApp extends Application {
     private static List<Activity> activityList = new ArrayList<>();
-    private DownloadService service = null;
+    private DownloadService service =null;
 
     @Override
     public void onCreate() {
@@ -62,36 +63,11 @@ public class SuperDownloaderApp extends Application {
         activityList.clear();
     }
 
-    /**
-     * 加入一个服务
-     *
-     * @param service 服务实例
-     */
-    public void addService(DownloadService service) {
+    public void setService(DownloadService service){
         this.service = service;
     }
 
-    /**
-     * 获取应用服务
-     *
-     * @return 服务实例
-     */
-    public DownloadService getService() {
+    public DownloadService getService(){
         return this.service;
-    }
-
-    /**
-     * 销毁服务
-     */
-    public void destroyService() {
-        if (this.service != null) {
-            this.service.stopSelf();
-            this.service = null;
-        }
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
     }
 }

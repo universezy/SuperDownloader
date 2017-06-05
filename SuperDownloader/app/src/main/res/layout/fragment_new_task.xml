@@ -4,40 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightcyan"
     android:orientation="vertical"
-    android:padding="8dp"
-    tools:context="com.example.agentzengyu.superdownloader.activity.NewTaskActivity">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnReturn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:text="@string/new_button_return"
-            android:textSize="13dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:text="@string/main_button_new"
-            android:textSize="20dp" />
-
-        <Button
-            android:id="@+id/btnDownload"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:text="@string/new_button_download"
-            android:textSize="13dp" />
-
-    </LinearLayout>
+    tools:context="com.example.agentzengyu.superdownloader.fragment.NewTaskFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,7 +16,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             android:layout_weight="8">
 
             <EditText
@@ -68,8 +36,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/black">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             android:layout_weight="8">
 
             <EditText
@@ -90,8 +66,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/black">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             android:layout_weight="8">
 
             <EditText
@@ -112,9 +96,37 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/black">
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnDownload"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_weight="6"
+            android:text="@string/new_button_download"
+            android:textSize="15dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/black">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="8"
+            android:background="@color/lightgray"
             android:paddingBottom="2dp"
             android:paddingTop="2dp">
 
@@ -123,7 +135,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@mipmap/ic_launcher_round" />
+                android:textSize="20dp"
+                android:gravity="center"
+                android:text="←" />
 
             <EditText
                 android:id="@+id/etWebsite"
@@ -131,21 +145,30 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_weight="8" />
+                android:layout_weight="6" />
 
             <Button
                 android:id="@+id/btnEnter"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@mipmap/ic_launcher_round" />
+                android:textSize="20dp"
+                android:gravity="center"
+                android:text="→"  />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black">
+
         </LinearLayout>
 
         <WebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="60"></WebView>
+            android:layout_weight="65"></WebView>
 
     </LinearLayout>
 

@@ -8,6 +8,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
+import com.example.agentzengyu.superdownloader.util.DownloadByUrl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class DownloadService extends Service {
     public void onCreate() {
         super.onCreate();
         superDownloaderApp = (SuperDownloaderApp) getApplication();
-        superDownloaderApp.addService(this);
+        superDownloaderApp.setService(this);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        stopSelf();
     }
 
     public class ServiceBinder extends Binder {
@@ -49,7 +51,8 @@ public class DownloadService extends Service {
      * @param url
      */
     public void startNewTaskByUrl(String url){
-
+        DownloadByUrl downloadByUrl = new DownloadByUrl(getApplicationContext());
+        downloadByUrl.download(url);
     }
 
     /**

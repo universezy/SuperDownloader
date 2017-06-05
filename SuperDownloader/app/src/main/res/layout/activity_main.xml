@@ -8,36 +8,52 @@
     android:gravity="center_horizontal"
     tools:context="com.example.agentzengyu.superdownloader.activity.MainActivity">
 
-    <Button
-        android:id="@+id/btnNew"
-        android:layout_marginTop="60dp"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@color/lightskyblue"
-        android:text="@string/main_button_new"/>
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@mipmap/ic_launcher"
+        android:layout_weight="9">
 
-    <Button
-        android:id="@+id/btnCurrent"
-        android:layout_marginTop="50dp"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@color/royalblue"
-        android:text="@string/main_button_current"/>
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/btnHistory"
-        android:layout_marginTop="50dp"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@color/dimgrey"
-        android:text="@string/main_button_history"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnExit"
-        android:layout_marginTop="150dp"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@color/orangered"
-        android:text="@string/main_button_exit"/>
+        <Button
+            android:id="@+id/btnNew"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/lightskyblue"
+            android:text="@string/main_button_new"/>
+
+        <Button
+            android:id="@+id/btnCurrent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/royalblue"
+            android:text="@string/main_button_current"/>
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/dimgrey"
+            android:text="@string/main_button_history"/>
+
+        <Button
+            android:id="@+id/btnSetting"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/orangered"
+            android:text="@string/main_button_setting"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">SuperDownloader</string>
 
-    <string name="main_button_new">New Task</string>
-    <string name="main_button_current">Current Task</string>
-    <string name="main_button_history">History Task</string>
+    <string name="main_button_new">New</string>
+    <string name="main_button_current">Current</string>
+    <string name="main_button_history">History</string>
     <string name="main_button_exit">Exit</string>
+    <string name="main_button_setting">Setting</string>
 
     <string name="new_button_return">Return</string>
     <string name="new_button_download">Download</string>
@@ -14,5 +15,8 @@
     <string name="new_button_url">Paste</string>
     <string name="new_button_link">Paste</string>
     <string name="new_button_file">Choose</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

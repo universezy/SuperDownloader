@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightcyan"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
+    tools:context="com.example.agentzengyu.superdownloader.fragment.SettingFragment">
+
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="100dp"
+        android:background="@color/orangered"
+        android:text="@string/main_button_exit" />
+</LinearLayout>
