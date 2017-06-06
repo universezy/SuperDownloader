@@ -9,10 +9,18 @@
     android:padding="8dp"
     tools:context="com.example.agentzengyu.superdownloader.fragment.CurrentTaskFragment">
 
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="TEST" />
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
     </android.support.v7.widget.RecyclerView>
 
