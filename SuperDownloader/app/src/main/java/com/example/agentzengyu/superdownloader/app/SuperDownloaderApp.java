@@ -2,7 +2,7 @@ package com.example.agentzengyu.superdownloader.app;
 
 import android.app.Activity;
 import android.app.Application;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 
 import com.example.agentzengyu.superdownloader.activity.MainActivity;
 import com.example.agentzengyu.superdownloader.service.DownloadService;
@@ -19,7 +19,8 @@ import java.util.List;
  */
 public class SuperDownloaderApp extends Application {
     private static List<Activity> activityList = new ArrayList<>();
-    private DownloadService service =null;
+    private static List<Fragment> fragmentList = new ArrayList<>();
+    private DownloadService service = null;
 
     @Override
     public void onCreate() {
@@ -63,11 +64,45 @@ public class SuperDownloaderApp extends Application {
         activityList.clear();
     }
 
-    public void setService(DownloadService service){
+    /**
+     * 绑定服务
+     *
+     * @param service
+     */
+    public void setService(DownloadService service) {
         this.service = service;
     }
 
-    public DownloadService getService(){
+    /**
+     * 获取服务
+     *
+     * @return
+     */
+    public DownloadService getService() {
         return this.service;
+    }
+
+    /**
+     * 加入一个碎片到列表
+     *
+     * @param fragment
+     */
+    public void addFragmentToList(Fragment fragment) {
+        fragmentList.add(fragment);
+    }
+
+    /**
+     * 获取碎片
+     *
+     * @param fragment
+     * @return
+     */
+    public Fragment getFragment(Class fragment) {
+        for (Fragment f : fragmentList) {
+            if (f.getClass().equals(fragment)) {
+                return f;
+            }
+        }
+        return null;
     }
 }

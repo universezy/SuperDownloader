@@ -39,6 +39,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
         superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
         setVariable();
+        superDownloaderApp.addFragmentToList(this);
         return view;
     }
 
@@ -104,7 +105,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
         webSettings.setBlockNetworkImage(false);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setJavaScriptEnabled(true);
-        //webView.loadUrl("file:///android_asset/www/default.html");
+//        webView.loadUrl("file:///android_asset/www/default.html");
         webView.loadUrl("https://www.baidu.com/");
     }
 

@@ -4,12 +4,13 @@ package com.example.agentzengyu.superdownloader.entity;
  * Created by Agent ZengYu on 2017/6/6.
  */
 
-public class DownloadItem {
+public class CurrentDownloadItem {
     private String name;
     private String msg1;
     private String msg2;
     private String msg3;
     private String msg4;
+    private int progress = 0;
 
     public String getMsg1() {
         return msg1;
@@ -31,6 +32,10 @@ public class DownloadItem {
         return name;
     }
 
+    public int getProgress() {
+        return progress;
+    }
+
     public void setMsg1(String msg1) {
         this.msg1 = msg1;
     }
@@ -49,5 +54,9 @@ public class DownloadItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 }
