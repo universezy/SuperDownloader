@@ -1,8 +1,11 @@
 package com.example.agentzengyu.superdownloader.fragment;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.agentzengyu.superdownloader.R;
 import com.example.agentzengyu.superdownloader.adapter.HistoryItemAdapter;
@@ -28,38 +33,57 @@ public class HistoryTaskFragment extends Fragment implements View.OnClickListene
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private HistoryItemAdapter historyItemAdapter;
-    private ArrayList<HistoryDownloadItem> historyDownloadItems = new ArrayList<>();
+    private DownloadManager downloadManager;
+    private Handler handler;
+    private Runnable runnable;
+    private ArrayList<HistoryDownloadItem> selectList= new ArrayList<>();
 
-    public HistoryTaskFragment(){
+    public HistoryTaskFragment() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history_task, null);
         superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
         superDownloaderApp.addFragmentToList(this);
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                historyItemAdapter.notifyDataSetChanged();
+                updateList();
+            }
+        };
+        downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        updateList();
         return view;
     }
 
     /**
      * 初始化布局
      */
-    private void initView(View view ) {
+    private void initView(View view) {
+        view.findViewById(R.id.btnAll).setOnClickListener(this);
+        view.findViewById(R.id.btnDelete).setOnClickListener(this);
+        view.findViewById(R.id.btnCancel).setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        historyItemAdapter = new HistoryItemAdapter(historyDownloadItems);
+        historyItemAdapter = new HistoryItemAdapter(superDownloaderApp.getService().getHistoryDownloadItems());
         historyItemAdapter.setItemClickListener(new HistoryItemAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, HistoryDownloadItem historyDownloadItem) {
-                LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.ll);
-                if (((ColorDrawable)linearLayout.getBackground()).getColor() == Color.parseColor("#87ceeb")) {
-                    linearLayout.setBackgroundColor(Color.parseColor("#a9a9a9"));
-                } else if (((ColorDrawable)linearLayout.getBackground()).getColor() == Color.parseColor("#a9a9a9")) {
-                    linearLayout.setBackgroundColor(Color.parseColor("#87ceeb"));
+                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll);
+                ImageView imageView = (ImageView)linearLayout.findViewById(R.id.ivSelect);
+                if(((ColorDrawable)imageView.getBackground()).getColor()==Color.parseColor("#d3d3d3")){
+                    ((ColorDrawable)imageView.getBackground()).setColor(Color.parseColor("#ff0000"));
+                    selectList.add(historyDownloadItem);
+                }else{
+                    ((ColorDrawable)imageView.getBackground()).setColor(Color.parseColor("#d3d3d3"));
+                    selectList.remove(historyDownloadItem);
                 }
             }
         });
@@ -67,21 +91,37 @@ public class HistoryTaskFragment extends Fragment implements View.OnClickListene
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    public HistoryItemAdapter getHistoryItemAdater(){
-        return this.historyItemAdapter;
+    private void updateList() {
+        handler.postDelayed(runnable, 1000);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvAll:
-
+            case R.id.btnAll:
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    LinearLayout linearLayout = (LinearLayout) recyclerView.getChildAt(i);
+                    ImageView imageView = (ImageView)linearLayout.findViewById(R.id.ivSelect);
+                    imageView.setBackgroundColor(Color.parseColor("#ff0000"));
+                }
                 break;
-            case R.id.tvDelete:
-
+            case R.id.btnDelete:
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    LinearLayout linearLayout = (LinearLayout) recyclerView.getChildAt(i);
+                    ImageView imageView = (ImageView)linearLayout.findViewById(R.id.ivSelect);
+                    if(((ColorDrawable)imageView.getBackground()).getColor()==Color.parseColor("#ff0000")){
+                        TextView textView = (TextView) linearLayout.findViewById(R.id.tvID);
+                        downloadManager.remove(Long.getLong(textView.getText().toString()));
+                        imageView.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                    }
+                }
                 break;
-            case R.id.tvCancel:
-
+            case R.id.btnCancel:
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    LinearLayout linearLayout = (LinearLayout) recyclerView.getChildAt(i);
+                    ImageView imageView = (ImageView)linearLayout.findViewById(R.id.ivSelect);
+                    imageView.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                }
                 break;
             default:
                 break;

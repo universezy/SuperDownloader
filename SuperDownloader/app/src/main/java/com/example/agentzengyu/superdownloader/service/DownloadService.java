@@ -20,13 +20,9 @@ import android.widget.Toast;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 import com.example.agentzengyu.superdownloader.entity.CurrentDownloadItem;
 import com.example.agentzengyu.superdownloader.entity.HistoryDownloadItem;
-import com.example.agentzengyu.superdownloader.fragment.CurrentTaskFragment;
-import com.example.agentzengyu.superdownloader.fragment.HistoryTaskFragment;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 下载服务，在后台操作
@@ -35,8 +31,8 @@ public class DownloadService extends Service {
     private SuperDownloaderApp superDownloaderApp = null;
     private DownloadManager downloadManager;
     private BroadcastReceiver broadcastReceiver;
-    private Map<Long, CurrentDownloadItem> map = new HashMap<>();
-    private ArrayList<Long> arrayList = new ArrayList<>();
+    private ArrayList<CurrentDownloadItem> currentDownloadItems = new ArrayList<>();
+    private ArrayList<HistoryDownloadItem> historyDownloadItems = new ArrayList<>();
     private Handler handler;
 
     @Override
@@ -44,12 +40,15 @@ public class DownloadService extends Service {
         super.onCreate();
         superDownloaderApp = (SuperDownloaderApp) getApplication();
         superDownloaderApp.setService(this);
+        handler = new Handler();
+        downloadManager = (DownloadManager) getApplicationContext().getSystemService(Context.DOWNLOAD_SERVICE);
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 checkStatus();
             }
         };
+        getApplicationContext().registerReceiver(broadcastReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     @Override
@@ -71,9 +70,15 @@ public class DownloadService extends Service {
     public class ServiceBinder extends Binder {
     }
 
+    /**
+     * 下载入口
+     *
+     * @param url 下载链接
+     */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void download(String url) {
         String objectName = url.substring(url.lastIndexOf(File.separator) + 1);
+        Cursor cursor = null;
         try {
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             //移动网络情况下是否允许漫游
@@ -86,73 +91,68 @@ public class DownloadService extends Service {
             request.setDescription("SuperDownload");
             request.setVisibleInDownloadsUi(true);
             request.setDestinationInExternalPublicDir(Environment.getExternalStorageDirectory().getAbsolutePath(), objectName);
-            getApplicationContext().registerReceiver(broadcastReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-            downloadManager = (DownloadManager) getApplicationContext().getSystemService(Context.DOWNLOAD_SERVICE);
+            Log.e("getAbsolutePath", Environment.getExternalStorageDirectory().getAbsolutePath());
             long downloadID = downloadManager.enqueue(request);
             Toast.makeText(getApplicationContext(), "Start to download: " + objectName, Toast.LENGTH_SHORT).show();
+
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadID);
-            Cursor cursor = downloadManager.query(query);
+            cursor = downloadManager.query(query);
             CurrentDownloadItem currentDownloadItem = new CurrentDownloadItem();
-            int indexTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE);
-            if (indexTitle >= 0) {
-                if (cursor.moveToFirst())
-                    currentDownloadItem.setName("" + cursor.getString(indexTitle));
+            currentDownloadItem.setID(downloadID);
+            int indexTitle;
+            if ((indexTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)) >= 0) {
+                String title = "", temp;
+                if (cursor.moveToFirst() && !"".equals(temp = cursor.getString(indexTitle)))
+                    title = temp;
+                currentDownloadItem.setName(title);
             }
-            int indexTotal = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-            if (indexTotal >= 0) {
-                if (cursor.moveToFirst())
-                    currentDownloadItem.setMsg1("" + cursor.getLong(indexTotal));
-            }
-            if(cursor!=null){
-                cursor.close();
-            }
-            currentDownloadItem.setMsg2("");
-            currentDownloadItem.setMsg3("");
-            currentDownloadItem.setMsg4("");
-            map.put(downloadID, currentDownloadItem);
-            arrayList.add(downloadID);
-            ((CurrentTaskFragment) superDownloaderApp.getFragment(CurrentTaskFragment.class)).getCurrentItemAdpter().addItem(0, currentDownloadItem);
-            getProgress(downloadID);
+            addItemToCurrentDownloadItems(currentDownloadItem);
+            getProgress(query, currentDownloadItem, true, true);
         } catch (IllegalArgumentException e) {
             Toast.makeText(getApplicationContext(), "Wrong url.", Toast.LENGTH_SHORT).show();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
+    /**
+     * 检查状态
+     */
     private void checkStatus() {
-        for (Long id : arrayList) {
-            CurrentDownloadItem currentDownloadItem = map.get(id);
+        for (CurrentDownloadItem currentDownloadItem : currentDownloadItems) {
             DownloadManager.Query query = new DownloadManager.Query();
-            query.setFilterById(id);
+            query.setFilterById(currentDownloadItem.getID());
             Cursor cursor = downloadManager.query(query);
             if (cursor.moveToFirst()) {
                 int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 switch (status) {
                     //下载暂停
                     case DownloadManager.STATUS_PAUSED:
-                        ((CurrentTaskFragment) superDownloaderApp.getFragment(CurrentTaskFragment.class)).getCurrentItemAdpter().setDownloadStatus(currentDownloadItem, false);
+                        setStatus(currentDownloadItem, false);
                         break;
                     //下载延迟
                     case DownloadManager.STATUS_PENDING:
                         break;
                     //正在下载
                     case DownloadManager.STATUS_RUNNING:
+                        setStatus(currentDownloadItem, true);
                         break;
                     //下载完成
                     case DownloadManager.STATUS_SUCCESSFUL:
                         Toast.makeText(getApplicationContext(), "Success to download.", Toast.LENGTH_SHORT).show();
-                        ((CurrentTaskFragment) superDownloaderApp.getFragment(CurrentTaskFragment.class)).getCurrentItemAdpter().removeItem(currentDownloadItem);
+                        currentDownloadItems.remove(currentDownloadItem);
                         HistoryDownloadItem historyDownloadItem = new HistoryDownloadItem();
                         historyDownloadItem.setName(currentDownloadItem.getName());
-                        historyDownloadItem.setMsg1(currentDownloadItem.getMsg1());
-                        historyDownloadItem.setMsg2(currentDownloadItem.getMsg2());
-                        historyDownloadItem.setMsg3(currentDownloadItem.getMsg3());
-                        historyDownloadItem.setMsg4(currentDownloadItem.getMsg4());
-                        ((HistoryTaskFragment) superDownloaderApp.getFragment(HistoryTaskFragment.class)).getHistoryItemAdater().addItem(0, historyDownloadItem);
+                        historyDownloadItem.setSize(currentDownloadItem.getSize());
+                        addItemToHistoryDownloadItems(historyDownloadItem);
                         break;
                     //下载失败
                     case DownloadManager.STATUS_FAILED:
                         Toast.makeText(getApplicationContext(), "Fail to download.", Toast.LENGTH_SHORT).show();
+                        setStatus(currentDownloadItem, false);
                         break;
                     default:
                         break;
@@ -161,29 +161,84 @@ public class DownloadService extends Service {
         }
     }
 
-    private void getProgress(final long downloadID) {
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(downloadID);
+    /**
+     * 下载进度
+     *
+     * @param currentDownloadItem 下载任务
+     */
+    public void getProgress(final DownloadManager.Query query, final CurrentDownloadItem currentDownloadItem, final boolean checkCurrentSize, final boolean checkTotalSize) {
+        query.setFilterById(currentDownloadItem.getID());
         final Cursor cursor = downloadManager.query(query);
-        handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                int currentSize = 1, total = 1;
-                if (cursor.moveToFirst())
-                    currentSize =
-                            cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                if (cursor.moveToFirst())
+                long currentSize = 0, total = -1;
+                if (cursor.moveToFirst()) {
+                    currentSize = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                     total = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                int progress = currentSize * 100 / total;
-                ((CurrentTaskFragment) superDownloaderApp.getFragment(CurrentTaskFragment.class)).getCurrentItemAdpter().updateProgress(map.get(downloadID), progress);
-                if(cursor!=null){
+                }
+                int progress = (int) (currentSize * 100 / total);
+                boolean nextCheckCurrentSize = true, nextCheckTotalSize = true;
+                if (checkTotalSize) {
+                    if (total > 0) {
+                        setSize(currentDownloadItem, total);
+                        nextCheckTotalSize = false;
+                    }
+                } else {
+                    nextCheckTotalSize = false;
+                }
+                if (checkCurrentSize && currentSize >= 0) {
+                    if (progress >= 0 && progress < 100) {
+                        setProgress(currentDownloadItem, progress);
+                    } else if (progress >= 100) {
+                        setProgress(currentDownloadItem, 100);
+                        return;
+                    }
+                }
+                getProgress(query, currentDownloadItem, nextCheckCurrentSize, nextCheckTotalSize);
+                if (cursor != null) {
                     cursor.close();
                 }
-                getProgress(downloadID);
             }
         };
         handler.postDelayed(runnable, 1000);
+    }
+
+    public void setSize(CurrentDownloadItem currentDownloadItem, long size) {
+        int index = currentDownloadItems.indexOf(currentDownloadItem);
+        if (index >= 0) {
+            currentDownloadItems.get(index).setSize(size);
+        }
+    }
+
+    public void setProgress(CurrentDownloadItem currentDownloadItem, int progress) {
+        int index = currentDownloadItems.indexOf(currentDownloadItem);
+        if (index >= 0) {
+            currentDownloadItems.get(index).setProgress(progress);
+        }
+    }
+
+    public void setStatus(CurrentDownloadItem currentDownloadItem, boolean downloading) {
+        int index = currentDownloadItems.indexOf(currentDownloadItem);
+        if (index >= 0) {
+            currentDownloadItems.get(index).setDownloading(downloading);
+        }
+    }
+
+    public ArrayList<CurrentDownloadItem> getCurrentDownloadItems() {
+        return this.currentDownloadItems;
+    }
+
+    public ArrayList<HistoryDownloadItem> getHistoryDownloadItems() {
+        return this.historyDownloadItems;
+    }
+
+    public void addItemToCurrentDownloadItems(CurrentDownloadItem currentDownloadItem) {
+        currentDownloadItems.add(currentDownloadItem);
+    }
+
+    public void addItemToHistoryDownloadItems(HistoryDownloadItem historyDownloadItem) {
+        historyDownloadItems.add(historyDownloadItem);
     }
 }
 

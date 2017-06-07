@@ -14,6 +14,9 @@ import android.view.View;
  * Created by ZengYu on 2017/6/6.
  */
 
+/**
+ * 环形进度条
+ */
 public class CircleProgressView extends View {
     private int mMaxProgress = 100;
     private int mProgress = 0;
@@ -38,7 +41,7 @@ public class CircleProgressView extends View {
 
         int width = this.getWidth();
         int height = this.getHeight();
-        int min = Math.min(width, height)-mCircleLineStrokeWidth;
+        int min = Math.min(width, height) - mCircleLineStrokeWidth;
 
         // 设置画笔相关属性
         mPaint.setAntiAlias(true);
@@ -46,6 +49,7 @@ public class CircleProgressView extends View {
         canvas.drawColor(Color.TRANSPARENT);
         mPaint.setStrokeWidth(mCircleLineStrokeWidth);
         mPaint.setStyle(Paint.Style.STROKE);
+
         // 位置
         mRectF.left = (width - min) / 2;
         mRectF.top = (height - min) / 2;
@@ -66,11 +70,21 @@ public class CircleProgressView extends View {
         canvas.drawText(text, width / 2 - textWidth / 2, height / 2 + textHeight / 2, mPaint);
     }
 
+    /**
+     * UI线程设置进度
+     *
+     * @param progress
+     */
     public void setProgress(int progress) {
         this.mProgress = progress;
         this.invalidate();
     }
 
+    /**
+     * 非UI线程设置进度
+     *
+     * @param progress
+     */
     public void setProgressNotInUiThread(int progress) {
         this.mProgress = progress;
         this.postInvalidate();

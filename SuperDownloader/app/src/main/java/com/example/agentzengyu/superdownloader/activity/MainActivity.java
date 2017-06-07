@@ -59,6 +59,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         findViewById(R.id.btnSetting).setOnClickListener(this);
     }
 
+    /**
+     * 初始化碎片
+     */
     private void initFragment() {
         newTaskFragment = new NewTaskFragment();
         currentTaskFragment = new CurrentTaskFragment();

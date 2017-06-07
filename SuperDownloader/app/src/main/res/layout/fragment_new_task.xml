@@ -15,20 +15,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/black">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8"
             android:background="@color/lightgray"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp">
+            android:paddingBottom="2dp">
 
             <Button
                 android:id="@+id/btnBack"
@@ -60,7 +50,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:background="@color/black">
 
         </LinearLayout>
@@ -69,13 +59,11 @@
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="74"></WebView>
+            android:layout_weight="70"></WebView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
+            android:layout_height="2dp"
             android:background="@color/black">
 
         </LinearLayout>
@@ -89,7 +77,7 @@
                 android:id="@+id/etUrl"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:singleLine="true"
                 android:hint="@string/new_hint_url" />
 
@@ -97,19 +85,18 @@
                 android:id="@+id/btnPasteUrl"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:text="@string/new_button_url" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
+            android:layout_height="2dp"
             android:background="@color/black">
 
         </LinearLayout>
+
 
         <Button
             android:id="@+id/btnDownload"

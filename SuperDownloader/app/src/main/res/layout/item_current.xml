@@ -7,6 +7,14 @@
     android:orientation="horizontal"
     android:padding="10dp">
 
+    <ImageView
+        android:id="@+id/ivSelect"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="10dp"
+        android:background="@color/lightgray" />
+
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="0dp"
@@ -18,44 +26,39 @@
         android:paddingRight="10dp">
 
         <TextView
-            android:id="@+id/tvName1"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             android:gravity="center_vertical"
-            android:text="test1"
+            android:text="Name"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tvName2"
+            android:id="@+id/tvName"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             android:gravity="center_vertical"
-            android:text="test2"
+            android:text="Name"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tvName3"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             android:gravity="center_vertical"
-            android:text="test3"
+            android:text="Size"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tvName4"
+            android:id="@+id/tvSize"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             android:gravity="center_vertical"
-            android:text="test4"
+            android:text="Size"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tvName5"
+            android:id="@+id/tvID"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:gravity="center_vertical"
-            android:text="test5"
-            android:textSize="15sp" />
+            android:layout_height="0dp" />
     </LinearLayout>
 
     <LinearLayout

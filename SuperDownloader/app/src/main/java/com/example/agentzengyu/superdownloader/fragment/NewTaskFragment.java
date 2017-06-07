@@ -105,7 +105,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
         webSettings.setBuiltInZoomControls(true);
         webSettings.setJavaScriptEnabled(true);
 //        webView.loadUrl("file:///android_asset/www/default.html");
-        webView.loadUrl("https://www.baidu.com/");
+//        webView.loadUrl("https://www.baidu.com/");
     }
 
     /**
@@ -160,6 +160,9 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * webview下载监听器
+     */
     class SuperDownloadListener implements DownloadListener {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override

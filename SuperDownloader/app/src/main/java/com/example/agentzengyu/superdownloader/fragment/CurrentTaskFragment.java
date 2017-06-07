@@ -1,8 +1,11 @@
 package com.example.agentzengyu.superdownloader.fragment;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,8 +21,6 @@ import com.example.agentzengyu.superdownloader.adapter.CurrentItemAdpter;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 import com.example.agentzengyu.superdownloader.entity.CurrentDownloadItem;
 
-import java.util.ArrayList;
-
 /**
  * 当前任务
  */
@@ -30,7 +31,9 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private CurrentItemAdpter currentItemAdpter;
-    private ArrayList<CurrentDownloadItem> currentDownloadItems = new ArrayList<>();
+    private DownloadManager downloadManager;
+    private Handler handler;
+    private Runnable runnable;
 
     public CurrentTaskFragment() {
 
@@ -42,6 +45,16 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
         superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
         superDownloaderApp.addFragmentToList(this);
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                currentItemAdpter.notifyDataSetChanged();
+                updateList();
+            }
+        };
+        downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        updateList();
         return view;
     }
 
@@ -49,20 +62,23 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
      * 初始化布局
      */
     private void initView(View view) {
+        view.findViewById(R.id.btnAll).setOnClickListener(this);
+        view.findViewById(R.id.btnDelete).setOnClickListener(this);
+        view.findViewById(R.id.btnCancel).setOnClickListener(this);
         mbtnTest = (Button) view.findViewById(R.id.btnTest);
         mbtnTest.setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        currentItemAdpter = new CurrentItemAdpter(currentDownloadItems);
+        currentItemAdpter = new CurrentItemAdpter(superDownloaderApp.getService().getCurrentDownloadItems());
         currentItemAdpter.setItemClickListener(new CurrentItemAdpter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, CurrentDownloadItem currentDownloadItem) {
-                LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.ll);
-                if (((ColorDrawable)linearLayout.getBackground()).getColor() == Color.parseColor("#87ceeb")) {
+                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll);
+                if (((ColorDrawable) linearLayout.getBackground()).getColor() == Color.parseColor("#87ceeb")) {
                     linearLayout.setBackgroundColor(Color.parseColor("#a9a9a9"));
-                } else if (((ColorDrawable)linearLayout.getBackground()).getColor() == Color.parseColor("#a9a9a9")) {
+                } else if (((ColorDrawable) linearLayout.getBackground()).getColor() == Color.parseColor("#a9a9a9")) {
                     linearLayout.setBackgroundColor(Color.parseColor("#87ceeb"));
                 }
             }
@@ -71,8 +87,8 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    public CurrentItemAdpter getCurrentItemAdpter() {
-        return this.currentItemAdpter;
+    private void updateList(){
+        handler.postDelayed(runnable,1000);
     }
 
     @Override
@@ -80,18 +96,16 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.btnTest:
                 CurrentDownloadItem currentDownloadItem = new CurrentDownloadItem();
-                currentDownloadItem.setMsg1("111");
-                currentDownloadItem.setMsg2("222");
-                currentDownloadItem.setMsg3("333");
-                currentDownloadItem.setMsg4("444");
                 currentDownloadItem.setName("555");
-                currentItemAdpter.addItem(0, currentDownloadItem);
+                currentDownloadItem.setSize(100000);
+                superDownloaderApp.getService().addItemToCurrentDownloadItems(currentDownloadItem);
+                currentItemAdpter.notifyDataSetChanged();
                 layoutManager.scrollToPosition(0);
                 break;
-            case R.id.tvAll:
+            case R.id.btnAll:
 
                 break;
-            case R.id.tvCancel:
+            case R.id.btnCancel:
 
                 break;
             default:

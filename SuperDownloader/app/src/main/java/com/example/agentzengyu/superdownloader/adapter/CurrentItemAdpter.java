@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.agentzengyu.superdownloader.R;
@@ -18,6 +17,9 @@ import java.util.ArrayList;
  * Created by ZengYu on 2017/6/6.
  */
 
+/**
+ * 当前任务适配器
+ */
 public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.ItemViewHolder> implements View.OnClickListener {
     private ArrayList<CurrentDownloadItem> currentDownloadItems = null;
     private OnRecyclerViewItemClickListener listener = null;
@@ -36,11 +38,9 @@ public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.It
 
     @Override
     public void onBindViewHolder(ItemViewHolder itemViewHolder, int position) {
-        itemViewHolder.getMtv1().setText(this.currentDownloadItems.get(position).getMsg1());
-        itemViewHolder.getMtv2().setText(this.currentDownloadItems.get(position).getMsg2());
-        itemViewHolder.getMtv3().setText(this.currentDownloadItems.get(position).getMsg3());
-        itemViewHolder.getMtv4().setText(this.currentDownloadItems.get(position).getMsg4());
-        itemViewHolder.getMtv5().setText(this.currentDownloadItems.get(position).getName());
+        itemViewHolder.getMtvName().setText(this.currentDownloadItems.get(position).getName());
+        itemViewHolder.getMtvSize().setText("" + this.currentDownloadItems.get(position).getSize());
+        itemViewHolder.getMtvID().setText(""+this.currentDownloadItems.get(position).getID());
         itemViewHolder.getCircleProgressView().setProgressNotInUiThread(this.currentDownloadItems.get(position).getProgress());
         itemViewHolder.itemView.setTag(this.currentDownloadItems.get(position));
     }
@@ -57,72 +57,46 @@ public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.It
         }
     }
 
+    /**
+     * 设置任务点击监听
+     *
+     * @param listener
+     */
     public void setItemClickListener(OnRecyclerViewItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void addItem(int position, CurrentDownloadItem currentDownloadItem) {
-        currentDownloadItems.add(position, currentDownloadItem);
-        notifyItemInserted(position);
-    }
-
-    public void removeItem(CurrentDownloadItem currentDownloadItem) {
-        if (currentDownloadItems.contains(currentDownloadItem)) {
-            currentDownloadItems.remove(currentDownloadItem);
-            notifyDataSetChanged();
-        }
-    }
-
-    public void updateProgress(CurrentDownloadItem currentDownloadItem, int progress) {
-        if (currentDownloadItems.contains(currentDownloadItem)) {
-            currentDownloadItems.get(currentDownloadItems.indexOf(currentDownloadItem)).setProgress(progress);
-            notifyDataSetChanged();
-        }
-    }
-
-    public void setDownloadStatus(CurrentDownloadItem currentDownloadItem, boolean downloading){
-        if (currentDownloadItems.contains(currentDownloadItem)) {
-            currentDownloadItems.get(currentDownloadItems.indexOf(currentDownloadItem)).setDownloading(downloading);
-            notifyDataSetChanged();
-        }
-    }
-
+    /**
+     * RecyclerView点击监听的接口
+     */
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, CurrentDownloadItem currentDownloadItem);
     }
 
+    /**
+     * 自定义任务容器
+     */
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView mtv1, mtv2, mtv3, mtv4, mtv5;
+        private TextView mtvName, mtvSize,mtvID;
         private CircleProgressView circleProgressView;
 
         public ItemViewHolder(View view) {
             super(view);
-            mtv1 = (TextView) view.findViewById(R.id.tvName1);
-            mtv2 = (TextView) view.findViewById(R.id.tvName2);
-            mtv3 = (TextView) view.findViewById(R.id.tvName3);
-            mtv4 = (TextView) view.findViewById(R.id.tvName4);
-            mtv5 = (TextView) view.findViewById(R.id.tvName5);
+            mtvName = (TextView) view.findViewById(R.id.tvName);
+            mtvSize = (TextView) view.findViewById(R.id.tvSize);
             circleProgressView = (CircleProgressView) view.findViewById(R.id.cp);
         }
 
-        public TextView getMtv1() {
-            return mtv1;
+        public TextView getMtvName() {
+            return mtvName;
         }
 
-        public TextView getMtv2() {
-            return mtv2;
+        public TextView getMtvSize() {
+            return mtvSize;
         }
 
-        public TextView getMtv3() {
-            return mtv3;
-        }
-
-        public TextView getMtv4() {
-            return mtv4;
-        }
-
-        public TextView getMtv5() {
-            return mtv5;
+        public TextView getMtvID() {
+            return mtvID;
         }
 
         public CircleProgressView getCircleProgressView() {
