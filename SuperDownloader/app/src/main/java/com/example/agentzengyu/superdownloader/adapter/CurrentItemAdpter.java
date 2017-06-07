@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.agentzengyu.superdownloader.R;
@@ -75,6 +76,13 @@ public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.It
     public void updateProgress(CurrentDownloadItem currentDownloadItem, int progress) {
         if (currentDownloadItems.contains(currentDownloadItem)) {
             currentDownloadItems.get(currentDownloadItems.indexOf(currentDownloadItem)).setProgress(progress);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setDownloadStatus(CurrentDownloadItem currentDownloadItem, boolean downloading){
+        if (currentDownloadItems.contains(currentDownloadItem)) {
+            currentDownloadItems.get(currentDownloadItems.indexOf(currentDownloadItem)).setDownloading(downloading);
             notifyDataSetChanged();
         }
     }

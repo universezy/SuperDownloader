@@ -23,7 +23,7 @@
             android:layout_height="20dp"
             android:gravity="center_vertical"
             android:text="test1"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tvName2"
@@ -31,7 +31,7 @@
             android:layout_height="20dp"
             android:gravity="center_vertical"
             android:text="test2"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tvName3"
@@ -39,7 +39,7 @@
             android:layout_height="20dp"
             android:gravity="center_vertical"
             android:text="test3"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tvName4"
@@ -47,7 +47,7 @@
             android:layout_height="20dp"
             android:gravity="center_vertical"
             android:text="test4"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tvName5"
@@ -55,14 +55,23 @@
             android:layout_height="20dp"
             android:gravity="center_vertical"
             android:text="test5"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
-    <com.example.agentzengyu.superdownloader.view.CircleProgressView
-        android:id="@+id/cp"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_marginLeft="15dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_marginLeft="15dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.example.agentzengyu.superdownloader.view.CircleProgressView
+            android:id="@+id/cp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 </LinearLayout>

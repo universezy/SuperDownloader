@@ -91,15 +91,6 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
             case R.id.tvAll:
 
                 break;
-            case R.id.tvStart:
-
-                break;
-            case R.id.tvPause:
-
-                break;
-            case R.id.tvDelete:
-
-                break;
             case R.id.tvCancel:
 
                 break;

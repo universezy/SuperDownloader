@@ -11,6 +11,7 @@ public class CurrentDownloadItem {
     private String msg3;
     private String msg4;
     private int progress = 0;
+    private boolean downloading = false;
 
     public String getMsg1() {
         return msg1;
@@ -36,6 +37,10 @@ public class CurrentDownloadItem {
         return progress;
     }
 
+    public boolean getDownloading() {
+        return downloading;
+    }
+
     public void setMsg1(String msg1) {
         this.msg1 = msg1;
     }
@@ -58,5 +63,9 @@ public class CurrentDownloadItem {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public void setDownloading(boolean downloading) {
+        this.downloading = downloading;
     }
 }

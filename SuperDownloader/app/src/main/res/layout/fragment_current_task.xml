@@ -22,27 +22,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="ALL"
-            android:textSize="13dp" />
-
-        <TextView
-            android:id="@+id/tvStart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="START"
-            android:textSize="13dp" />
-
-        <TextView
-            android:id="@+id/tvPause"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="PAUSE"
-            android:textSize="13dp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/tvDelete"
@@ -52,7 +32,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="DELETE"
-            android:textSize="13dp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/tvCancel"
@@ -62,7 +42,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="CANCEL"
-            android:textSize="13dp" />
+            android:textSize="18dp" />
     </LinearLayout>
 
     <Button

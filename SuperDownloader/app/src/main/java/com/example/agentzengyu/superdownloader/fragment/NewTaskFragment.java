@@ -3,12 +3,14 @@ package com.example.agentzengyu.superdownloader.fragment;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -26,10 +28,10 @@ import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 public class NewTaskFragment extends Fragment implements View.OnClickListener {
     private SuperDownloaderApp superDownloaderApp = null;
 
-    private EditText metUrl, metLink, metTorrent, metWebsite;
+    private EditText metUrl, metWebsite;
     private WebView webView;
 
-    public NewTaskFragment(){
+    public NewTaskFragment() {
 
     }
 
@@ -54,13 +56,9 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
     private void initView(View view) {
         view.findViewById(R.id.btnDownload).setOnClickListener(this);
         view.findViewById(R.id.btnPasteUrl).setOnClickListener(this);
-        view.findViewById(R.id.btnPasteLink).setOnClickListener(this);
-        view.findViewById(R.id.btnChooseTorrent).setOnClickListener(this);
         view.findViewById(R.id.btnBack).setOnClickListener(this);
         view.findViewById(R.id.btnEnter).setOnClickListener(this);
         metUrl = (EditText) view.findViewById(R.id.etUrl);
-        metLink = (EditText) view.findViewById(R.id.etLink);
-        metTorrent = (EditText) view.findViewById(R.id.etTorrent);
         metWebsite = (EditText) view.findViewById(R.id.etWebsite);
         webView = (WebView) view.findViewById(R.id.webview);
     }
@@ -79,7 +77,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-                metWebsite.setText(url+"");
+                metWebsite.setText(url + "");
                 view.loadUrl(url);
                 return true;
             }
@@ -99,6 +97,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
         });
+        webView.setDownloadListener(new SuperDownloadListener());
         webView.setInitialScale(200);
         WebSettings webSettings = webView.getSettings();
         webSettings.setAllowFileAccess(true);
@@ -112,24 +111,14 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
     /**
      * 下载入口
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void download() {
         String stringUrl = metUrl.getText().toString().trim();
-        String stringLink = metLink.getText().toString().trim();
-        String stringTorrent = metTorrent.getText().toString().trim();
-        if ("".equals(stringUrl) && "".equals(stringLink) && "".equals(stringTorrent)) {
+        if ("".equals(stringUrl)) {
             Toast.makeText(getActivity(), "Nothing to download.", Toast.LENGTH_SHORT).show();
-        } else if (!"".equals(stringUrl) && "".equals(stringLink) && "".equals(stringTorrent)) {
-            superDownloaderApp.getService().startNewTaskByUrl(stringUrl);
-        } else if ("".equals(stringUrl) && !"".equals(stringLink) && "".equals(stringTorrent)) {
-            superDownloaderApp.getService().startNewTaskByLink(stringLink);
-        } else if ("".equals(stringUrl) && "".equals(stringLink) && !"".equals(stringTorrent)) {
-            if (!stringTorrent.toLowerCase().endsWith(".torrent")) {
-                Toast.makeText(getActivity(), "Wrong file type!", Toast.LENGTH_SHORT).show();
-            }
-            superDownloaderApp.getService().startNewTaskByTorrent(Uri.parse(stringTorrent));
-        } else {
-            Toast.makeText(getActivity(), "Only one task allowed to execute.", Toast.LENGTH_SHORT).show();
+            return;
         }
+        superDownloaderApp.getService().download(stringUrl);
     }
 
     /**
@@ -145,6 +134,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
         return context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -154,12 +144,6 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
             case R.id.btnPasteUrl:
                 metUrl.setText(getClipBoardContext());
                 break;
-            case R.id.btnPasteLink:
-                metLink.setText(getClipBoardContext());
-                break;
-            case R.id.btnChooseTorrent:
-
-                break;
             case R.id.btnBack:
                 webView.goBack();
                 break;
@@ -167,12 +151,20 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
                 String website = metWebsite.getText().toString().trim();
                 if ("".equals(website))
                     return;
-                if (website.toLowerCase().indexOf("http://") != 0)
+                if (website.toLowerCase().indexOf("http://") != 0 && website.toLowerCase().indexOf("https://") != 0)
                     website = "http://" + website;
                 webView.loadUrl(website);
                 break;
             default:
                 break;
+        }
+    }
+
+    class SuperDownloadListener implements DownloadListener {
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+            superDownloaderApp.getService().download(url);
         }
     }
 }
