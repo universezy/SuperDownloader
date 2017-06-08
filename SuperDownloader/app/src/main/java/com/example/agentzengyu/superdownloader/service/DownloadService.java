@@ -17,6 +17,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.agentzengyu.superdownloader.app.Config;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 import com.example.agentzengyu.superdownloader.entity.CurrentDownloadItem;
 import com.example.agentzengyu.superdownloader.entity.HistoryDownloadItem;
@@ -235,10 +236,41 @@ public class DownloadService extends Service {
 
     public void addItemToCurrentDownloadItems(CurrentDownloadItem currentDownloadItem) {
         currentDownloadItems.add(currentDownloadItem);
+        Intent intent = new Intent(Config.SERVICE);
+        intent.putExtra(Config.SUPERDOWNLOAD, Config.CURRENT);
+        sendBroadcast(intent);
     }
 
     public void addItemToHistoryDownloadItems(HistoryDownloadItem historyDownloadItem) {
         historyDownloadItems.add(historyDownloadItem);
+        Intent intent = new Intent(Config.SERVICE);
+        intent.putExtra(Config.SUPERDOWNLOAD, Config.HISTORY);
+        sendBroadcast(intent);
+    }
+
+    public void removeItemFromCurrentDownloadItems(long downloadID) {
+        downloadManager.remove(downloadID);
+        for (CurrentDownloadItem item : currentDownloadItems) {
+            if (item.getID() == downloadID) {
+                currentDownloadItems.remove(item);
+                break;
+            }
+        }
+        Intent intent = new Intent(Config.SERVICE);
+        intent.putExtra(Config.SUPERDOWNLOAD, Config.CURRENT);
+        sendBroadcast(intent);
+    }
+
+    public void removeItemFromHistoryDownloadItems(long downloadID) {
+        for (HistoryDownloadItem item : historyDownloadItems) {
+            if (item.getID() == downloadID) {
+                historyDownloadItems.remove(item);
+                break;
+            }
+        }
+        Intent intent = new Intent(Config.SERVICE);
+        intent.putExtra(Config.SUPERDOWNLOAD, Config.HISTORY);
+        sendBroadcast(intent);
     }
 }
 

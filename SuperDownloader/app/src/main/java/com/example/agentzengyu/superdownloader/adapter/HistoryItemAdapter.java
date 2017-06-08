@@ -36,8 +36,13 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
 
     @Override
     public void onBindViewHolder(ItemViewHolder itemViewHolder, int position) {
-        itemViewHolder.getName().setText(this.historyDownloadItems.get(position).getName());
-        itemViewHolder.getSize().setText("" + this.historyDownloadItems.get(position).getSize());
+        String temp, text = "";
+        if ((temp = this.historyDownloadItems.get(position).getName()) != null) {
+            text += temp;
+        }
+        itemViewHolder.getMtvName().setText(text);
+        itemViewHolder.getMtvSize().setText("" + this.historyDownloadItems.get(position).getSize());
+        itemViewHolder.getMtvID().setText("" + this.historyDownloadItems.get(position).getID());
         itemViewHolder.itemView.setTag(this.historyDownloadItems.get(position));
     }
 
@@ -73,20 +78,25 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
      * 自定义任务容器
      */
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView mtvName, mtvSize;
+        private TextView mtvName, mtvSize, mtvID;
 
         public ItemViewHolder(View view) {
             super(view);
             mtvName = (TextView) view.findViewById(R.id.tvName);
             mtvSize = (TextView) view.findViewById(R.id.tvSize);
+            mtvID = (TextView)view.findViewById(R.id.tvID);
         }
 
-        public TextView getName() {
+        public TextView getMtvName() {
             return mtvName;
         }
 
-        public TextView getSize() {
+        public TextView getMtvSize() {
             return mtvSize;
+        }
+
+        public TextView getMtvID() {
+            return mtvID;
         }
     }
 }

@@ -38,9 +38,13 @@ public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.It
 
     @Override
     public void onBindViewHolder(ItemViewHolder itemViewHolder, int position) {
-        itemViewHolder.getMtvName().setText(this.currentDownloadItems.get(position).getName());
+        String temp, text = "";
+        if ((temp = this.currentDownloadItems.get(position).getName()) != null) {
+            text += temp;
+        }
+        itemViewHolder.getMtvName().setText(text);
         itemViewHolder.getMtvSize().setText("" + this.currentDownloadItems.get(position).getSize());
-        itemViewHolder.getMtvID().setText(""+this.currentDownloadItems.get(position).getID());
+        itemViewHolder.getMtvID().setText("" + this.currentDownloadItems.get(position).getID());
         itemViewHolder.getCircleProgressView().setProgressNotInUiThread(this.currentDownloadItems.get(position).getProgress());
         itemViewHolder.itemView.setTag(this.currentDownloadItems.get(position));
     }
@@ -77,13 +81,14 @@ public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.It
      * 自定义任务容器
      */
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView mtvName, mtvSize,mtvID;
+        private TextView mtvName, mtvSize, mtvID;
         private CircleProgressView circleProgressView;
 
         public ItemViewHolder(View view) {
             super(view);
             mtvName = (TextView) view.findViewById(R.id.tvName);
             mtvSize = (TextView) view.findViewById(R.id.tvSize);
+            mtvID = (TextView)view.findViewById(R.id.tvID);
             circleProgressView = (CircleProgressView) view.findViewById(R.id.cp);
         }
 

@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.agentzengyu.superdownloader">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
         android:name=".app.SuperDownloaderApp"
@@ -22,7 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -33,6 +34,10 @@
             android:name=".service.DownloadService"
             android:enabled="true"
             android:exported="true" />
+
+        <receiver android:name=".fragment.CurrentTaskFragment$CurrentReceiver"/>
+
+        <receiver android:name=".fragment.HistoryTaskFragment$HistoryReceiver"/>
     </application>
 
 </manifest>

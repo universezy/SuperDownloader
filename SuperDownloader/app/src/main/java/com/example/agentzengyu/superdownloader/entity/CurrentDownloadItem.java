@@ -10,9 +10,9 @@ package com.example.agentzengyu.superdownloader.entity;
 public class CurrentDownloadItem {
     private String name;
     private int progress = 0;
+    private long ID = 0;
     private boolean downloading = false;
     private long size = 0;
-    private long ID = 0;
 
     public String getName() {
         return name;
