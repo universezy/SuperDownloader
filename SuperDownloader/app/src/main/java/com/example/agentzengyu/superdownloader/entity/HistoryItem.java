@@ -7,10 +7,11 @@ package com.example.agentzengyu.superdownloader.entity;
 /**
  * 历史任务类
  */
-public class HistoryDownloadItem {
+public class HistoryItem {
     private String name;
     private long size = 0;
     private long ID = 0;
+    private String path = "";
 
     public String getName() {
         return name;
@@ -24,6 +25,10 @@ public class HistoryDownloadItem {
         return ID;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -34,5 +39,9 @@ public class HistoryDownloadItem {
 
     public void setID(long ID) {
         this.ID = ID;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -32,7 +32,7 @@ public class SuperDownloaderApp extends Application {
      *
      * @param activity 活动实例
      */
-    public void addActivityToList(Activity activity) {
+    public void addActivity(Activity activity) {
         if (!activityList.contains(activity))
             activityList.add(activity);
     }
@@ -42,7 +42,7 @@ public class SuperDownloaderApp extends Application {
      *
      * @param activity 活动实例
      */
-    public void destroyActivityFromList(Activity activity) {
+    public void destroyActivity(Activity activity) {
         if (activity == null)
             return;
         if (activityList.contains(activity)) {
@@ -54,13 +54,13 @@ public class SuperDownloaderApp extends Application {
     /**
      * 销毁所有活动
      */
-    public void destroyAllActivitiesFromList() {
+    public void destroyAllActivities() {
         for (Activity activity : activityList) {
             if (activity != null && !(activity instanceof MainActivity))
                 activity.finish();
         }
         if (activityList.size() == 1 && activityList.get(0) instanceof MainActivity)
-            destroyActivityFromList(activityList.get(0));
+            destroyActivity(activityList.get(0));
         activityList.clear();
     }
 
@@ -87,7 +87,7 @@ public class SuperDownloaderApp extends Application {
      *
      * @param fragment
      */
-    public void addFragmentToList(Fragment fragment) {
+    public void addFragment(Fragment fragment) {
         fragmentList.add(fragment);
     }
 

@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,41 +23,38 @@ import com.example.agentzengyu.superdownloader.R;
 import com.example.agentzengyu.superdownloader.adapter.CurrentItemAdpter;
 import com.example.agentzengyu.superdownloader.app.Config;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
-import com.example.agentzengyu.superdownloader.entity.CurrentDownloadItem;
-
-import java.util.Random;
+import com.example.agentzengyu.superdownloader.entity.CurrentItem;
 
 /**
  * 当前任务
  */
-public class CurrentTaskFragment extends Fragment implements View.OnClickListener {
-    private SuperDownloaderApp superDownloaderApp = null;
+public class CurrentFragment extends Fragment implements View.OnClickListener {
+    private SuperDownloaderApp app = null;
 
-    private Button mbtnTest;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private CurrentItemAdpter currentItemAdpter;
-    private CurrentReceiver currentReceiver;
+    private CurrentItemAdpter itemAdpter;
+    private CurrentReceiver receiver;
 
-    public CurrentTaskFragment() {
+    public CurrentFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_current_task, null);
-        superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
+        View view = inflater.inflate(R.layout.fragment_current, null);
+        app = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
-        superDownloaderApp.addFragmentToList(this);
-        currentReceiver = new CurrentReceiver();
-        IntentFilter intentFilter = new IntentFilter(Config.SERVICE);
-        getActivity().registerReceiver(currentReceiver, intentFilter);
+        app.addFragment(this);
+        receiver = new CurrentReceiver();
+        IntentFilter filter = new IntentFilter(Config.SERVICE);
+        getActivity().registerReceiver(receiver, filter);
         return view;
     }
 
     @Override
     public void onDestroy() {
-        getActivity().unregisterReceiver(currentReceiver);
+        getActivity().unregisterReceiver(receiver);
         super.onDestroy();
     }
 
@@ -69,16 +65,14 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
         view.findViewById(R.id.btnAll).setOnClickListener(this);
         view.findViewById(R.id.btnDelete).setOnClickListener(this);
         view.findViewById(R.id.btnCancel).setOnClickListener(this);
-        mbtnTest = (Button) view.findViewById(R.id.btnTest);
-        mbtnTest.setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        currentItemAdpter = new CurrentItemAdpter(superDownloaderApp.getService().getCurrentDownloadItems());
-        currentItemAdpter.setItemClickListener(new CurrentItemAdpter.OnRecyclerViewItemClickListener() {
+        itemAdpter = new CurrentItemAdpter(app.getService().getCurrentItems());
+        itemAdpter.setItemClickListener(new CurrentItemAdpter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, CurrentDownloadItem currentDownloadItem) {
+            public void onItemClick(View view, CurrentItem currentItem) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.ivSelect);
                 if (((ColorDrawable) imageView.getBackground()).getColor() == Color.parseColor("#d3d3d3")) {
                     ((ColorDrawable) imageView.getBackground()).setColor(Color.parseColor("#ff0000"));
@@ -87,23 +81,13 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
                 }
             }
         });
-        recyclerView.setAdapter(currentItemAdpter);
+        recyclerView.setAdapter(itemAdpter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnTest:
-                CurrentDownloadItem currentDownloadItem = new CurrentDownloadItem();
-                currentDownloadItem.setName(System.currentTimeMillis() + "");
-                currentDownloadItem.setSize(new Random().nextInt(100000));
-                currentDownloadItem.setID(System.currentTimeMillis());
-                currentDownloadItem.setProgress(new Random().nextInt(100));
-                superDownloaderApp.getService().addItemToCurrentDownloadItems(currentDownloadItem);
-                currentItemAdpter.notifyDataSetChanged();
-                layoutManager.scrollToPosition(0);
-                break;
             case R.id.btnAll:
                 for (int i = 0; i < recyclerView.getChildCount(); i++) {
                     LinearLayout linearLayout = (LinearLayout) recyclerView.getChildAt(i);
@@ -118,7 +102,7 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
                     if (((ColorDrawable) imageView.getBackground()).getColor() == Color.parseColor("#ff0000")) {
                         TextView textView = (TextView) linearLayout.findViewById(R.id.tvID);
                         long id = Long.parseLong(textView.getText().toString());
-                        superDownloaderApp.getService().removeItemFromCurrentDownloadItems(id);
+                        app.getService().removeCurrentItem(id);
                         imageView.setBackgroundColor(Color.parseColor("#d3d3d3"));
                     }
                 }
@@ -141,7 +125,7 @@ public class CurrentTaskFragment extends Fragment implements View.OnClickListene
             String state = intent.getStringExtra(Config.SUPERDOWNLOAD);
             Log.e("state",state);
             if (state.equals(Config.CURRENT)) {
-                currentItemAdpter.notifyDataSetChanged();
+                itemAdpter.notifyDataSetChanged();
             }
         }
     }

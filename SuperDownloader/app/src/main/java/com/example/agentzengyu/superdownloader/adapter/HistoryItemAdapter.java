@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.agentzengyu.superdownloader.R;
-import com.example.agentzengyu.superdownloader.entity.HistoryDownloadItem;
+import com.example.agentzengyu.superdownloader.entity.HistoryItem;
 
 import java.util.ArrayList;
 
@@ -19,42 +19,42 @@ import java.util.ArrayList;
  * 历史任务适配器
  */
 public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.ItemViewHolder> implements View.OnClickListener {
-    private ArrayList<HistoryDownloadItem> historyDownloadItems = null;
+    private ArrayList<HistoryItem> itemArrayList = null;
     private OnRecyclerViewItemClickListener listener = null;
 
-    public HistoryItemAdapter(ArrayList<HistoryDownloadItem> arrayList) {
-        this.historyDownloadItems = arrayList;
+    public HistoryItemAdapter(ArrayList<HistoryItem> arrayList) {
+        this.itemArrayList = arrayList;
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_current, parent, false);
-        ItemViewHolder viewHolder = new ItemViewHolder(view);
+        ItemViewHolder holder = new ItemViewHolder(view);
         view.setOnClickListener(this);
-        return viewHolder;
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder itemViewHolder, int position) {
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
         String temp, text = "";
-        if ((temp = this.historyDownloadItems.get(position).getName()) != null) {
+        if ((temp = this.itemArrayList.get(position).getName()) != null) {
             text += temp;
         }
-        itemViewHolder.getMtvName().setText(text);
-        itemViewHolder.getMtvSize().setText("" + this.historyDownloadItems.get(position).getSize());
-        itemViewHolder.getMtvID().setText("" + this.historyDownloadItems.get(position).getID());
-        itemViewHolder.itemView.setTag(this.historyDownloadItems.get(position));
+        holder.getMtvName().setText(text);
+        holder.getMtvSize().setText("" + this.itemArrayList.get(position).getSize());
+        holder.getMtvID().setText("" + this.itemArrayList.get(position).getID());
+        holder.itemView.setTag(this.itemArrayList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return historyDownloadItems.size();
+        return itemArrayList.size();
     }
 
     @Override
     public void onClick(View v) {
         if (listener != null) {
-            listener.onItemClick(v, (HistoryDownloadItem) v.getTag());
+            listener.onItemClick(v, (HistoryItem) v.getTag());
         }
     }
 
@@ -71,7 +71,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
      * RecyclerView点击监听的接口
      */
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, HistoryDownloadItem historyDownloadItem);
+        void onItemClick(View view, HistoryItem historyItem);
     }
 
     /**

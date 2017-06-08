@@ -11,7 +11,7 @@ import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 
 
 public class SettingFragment extends Fragment implements View.OnClickListener{
-    private SuperDownloaderApp superDownloaderApp = null;
+    private SuperDownloaderApp app = null;
 
     public SettingFragment() {
     }
@@ -21,7 +21,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, null);
-        superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
+        app = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
         return view;
     }
@@ -38,7 +38,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnExit:
-                superDownloaderApp.destroyAllActivitiesFromList();
+                app.destroyAllActivities();
                 break;
             default:
                 break;

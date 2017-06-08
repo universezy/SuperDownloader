@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/lightcyan"
     android:orientation="vertical"
-    tools:context="com.example.agentzengyu.superdownloader.fragment.NewTaskFragment">
+    tools:context="com.example.agentzengyu.superdownloader.fragment.NewFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

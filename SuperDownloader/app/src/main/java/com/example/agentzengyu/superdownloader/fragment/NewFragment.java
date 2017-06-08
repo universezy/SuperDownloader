@@ -25,23 +25,23 @@ import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
 /**
  * 新建任务
  */
-public class NewTaskFragment extends Fragment implements View.OnClickListener {
-    private SuperDownloaderApp superDownloaderApp = null;
+public class NewFragment extends Fragment implements View.OnClickListener {
+    private SuperDownloaderApp app = null;
 
     private EditText metUrl, metWebsite;
     private WebView webView;
 
-    public NewTaskFragment() {
+    public NewFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new_task, null);
-        superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
+        View view = inflater.inflate(R.layout.fragment_new, null);
+        app = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
         setVariable();
-        superDownloaderApp.addFragmentToList(this);
+        app.addFragment(this);
         return view;
     }
 
@@ -118,7 +118,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "Nothing to download.", Toast.LENGTH_SHORT).show();
             return;
         }
-        superDownloaderApp.getService().download(stringUrl);
+        app.getService().download(stringUrl);
     }
 
     /**
@@ -128,9 +128,9 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
      */
     private String getClipBoardContext() {
         String context = "";
-        ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        if (clipboardManager.hasPrimaryClip())
-            context = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
+        ClipboardManager manager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        if (manager.hasPrimaryClip())
+            context = manager.getPrimaryClip().getItemAt(0).getText().toString();
         return context;
     }
 
@@ -167,7 +167,7 @@ public class NewTaskFragment extends Fragment implements View.OnClickListener {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-            superDownloaderApp.getService().download(url);
+            app.getService().download(url);
         }
     }
 }

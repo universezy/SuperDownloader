@@ -23,32 +23,32 @@ import com.example.agentzengyu.superdownloader.R;
 import com.example.agentzengyu.superdownloader.adapter.HistoryItemAdapter;
 import com.example.agentzengyu.superdownloader.app.Config;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
-import com.example.agentzengyu.superdownloader.entity.HistoryDownloadItem;
+import com.example.agentzengyu.superdownloader.entity.HistoryItem;
 
 /**
  * 历史任务
  */
-public class HistoryTaskFragment extends Fragment implements View.OnClickListener {
-    private SuperDownloaderApp superDownloaderApp = null;
+public class HistoryFragment extends Fragment implements View.OnClickListener {
+    private SuperDownloaderApp app = null;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private HistoryItemAdapter historyItemAdapter;
-    private HistoryReceiver historyReceiver;
+    private HistoryItemAdapter itemAdapter;
+    private HistoryReceiver receiver;
 
-    public HistoryTaskFragment() {
+    public HistoryFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_task, null);
-        superDownloaderApp = (SuperDownloaderApp) getActivity().getApplication();
+        View view = inflater.inflate(R.layout.fragment_history, null);
+        app = (SuperDownloaderApp) getActivity().getApplication();
         initView(view);
-        superDownloaderApp.addFragmentToList(this);
-        historyReceiver = new HistoryReceiver();
-        IntentFilter intentFilter = new IntentFilter(Config.SERVICE);
-        getActivity().registerReceiver(historyReceiver, intentFilter);
+        app.addFragment(this);
+        receiver = new HistoryReceiver();
+        IntentFilter filter = new IntentFilter(Config.SERVICE);
+        getActivity().registerReceiver(receiver, filter);
         return view;
     }
 
@@ -63,10 +63,10 @@ public class HistoryTaskFragment extends Fragment implements View.OnClickListene
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        historyItemAdapter = new HistoryItemAdapter(superDownloaderApp.getService().getHistoryDownloadItems());
-        historyItemAdapter.setItemClickListener(new HistoryItemAdapter.OnRecyclerViewItemClickListener() {
+        itemAdapter = new HistoryItemAdapter(app.getService().getHistoryItems());
+        itemAdapter.setItemClickListener(new HistoryItemAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, HistoryDownloadItem historyDownloadItem) {
+            public void onItemClick(View view, HistoryItem historyItem) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.ivSelect);
                 if (((ColorDrawable) imageView.getBackground()).getColor() == Color.parseColor("#d3d3d3")) {
                     ((ColorDrawable) imageView.getBackground()).setColor(Color.parseColor("#ff0000"));
@@ -75,7 +75,7 @@ public class HistoryTaskFragment extends Fragment implements View.OnClickListene
                 }
             }
         });
-        recyclerView.setAdapter(historyItemAdapter);
+        recyclerView.setAdapter(itemAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
@@ -96,7 +96,7 @@ public class HistoryTaskFragment extends Fragment implements View.OnClickListene
                     if (((ColorDrawable) imageView.getBackground()).getColor() == Color.parseColor("#ff0000")) {
                         TextView textView = (TextView) linearLayout.findViewById(R.id.tvID);
                         long id = Long.parseLong(textView.getText().toString());
-                        superDownloaderApp.getService().removeItemFromHistoryDownloadItems(id);
+                        app.getService().removeHistoryItem(id);
                         imageView.setBackgroundColor(Color.parseColor("#d3d3d3"));
                     }
                 }
@@ -119,7 +119,7 @@ public class HistoryTaskFragment extends Fragment implements View.OnClickListene
             String state = intent.getStringExtra(Config.SUPERDOWNLOAD);
             Log.e("state",state);
             if (state.equals(Config.HISTORY)) {
-                historyItemAdapter.notifyDataSetChanged();
+                itemAdapter.notifyDataSetChanged();
             }
         }
     }

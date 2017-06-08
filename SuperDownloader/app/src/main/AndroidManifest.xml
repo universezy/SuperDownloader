@@ -35,9 +35,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name=".fragment.CurrentTaskFragment$CurrentReceiver"/>
+        <receiver android:name=".fragment.CurrentFragment$CurrentReceiver"/>
 
-        <receiver android:name=".fragment.HistoryTaskFragment$HistoryReceiver"/>
+        <receiver android:name=".fragment.HistoryFragment$HistoryReceiver"/>
     </application>
 
 </manifest>

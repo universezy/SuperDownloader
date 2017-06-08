@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.agentzengyu.superdownloader.R;
-import com.example.agentzengyu.superdownloader.entity.CurrentDownloadItem;
+import com.example.agentzengyu.superdownloader.entity.CurrentItem;
 import com.example.agentzengyu.superdownloader.view.CircleProgressView;
 
 import java.util.ArrayList;
@@ -21,43 +21,43 @@ import java.util.ArrayList;
  * 当前任务适配器
  */
 public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.ItemViewHolder> implements View.OnClickListener {
-    private ArrayList<CurrentDownloadItem> currentDownloadItems = null;
+    private ArrayList<CurrentItem> itemArrayList = null;
     private OnRecyclerViewItemClickListener listener = null;
 
-    public CurrentItemAdpter(ArrayList<CurrentDownloadItem> arrayList) {
-        this.currentDownloadItems = arrayList;
+    public CurrentItemAdpter(ArrayList<CurrentItem> arrayList) {
+        this.itemArrayList = arrayList;
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_current, parent, false);
-        ItemViewHolder viewHolder = new ItemViewHolder(view);
+        ItemViewHolder holder = new ItemViewHolder(view);
         view.setOnClickListener(this);
-        return viewHolder;
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder itemViewHolder, int position) {
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
         String temp, text = "";
-        if ((temp = this.currentDownloadItems.get(position).getName()) != null) {
+        if ((temp = this.itemArrayList.get(position).getName()) != null) {
             text += temp;
         }
-        itemViewHolder.getMtvName().setText(text);
-        itemViewHolder.getMtvSize().setText("" + this.currentDownloadItems.get(position).getSize());
-        itemViewHolder.getMtvID().setText("" + this.currentDownloadItems.get(position).getID());
-        itemViewHolder.getCircleProgressView().setProgressNotInUiThread(this.currentDownloadItems.get(position).getProgress());
-        itemViewHolder.itemView.setTag(this.currentDownloadItems.get(position));
+        holder.getMtvName().setText(text);
+        holder.getMtvSize().setText("" + this.itemArrayList.get(position).getSize());
+        holder.getMtvID().setText("" + this.itemArrayList.get(position).getID());
+        holder.getCircleProgressView().setProgressNotInUiThread(this.itemArrayList.get(position).getProgress());
+        holder.itemView.setTag(this.itemArrayList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return currentDownloadItems.size();
+        return itemArrayList.size();
     }
 
     @Override
     public void onClick(View v) {
         if (listener != null) {
-            listener.onItemClick(v, (CurrentDownloadItem) v.getTag());
+            listener.onItemClick(v, (CurrentItem) v.getTag());
         }
     }
 
@@ -74,7 +74,7 @@ public class CurrentItemAdpter extends RecyclerView.Adapter<CurrentItemAdpter.It
      * RecyclerView点击监听的接口
      */
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, CurrentDownloadItem currentDownloadItem);
+        void onItemClick(View view, CurrentItem currentItem);
     }
 
     /**

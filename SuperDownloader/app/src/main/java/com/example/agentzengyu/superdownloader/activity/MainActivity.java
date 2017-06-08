@@ -14,9 +14,9 @@ import android.widget.Toast;
 
 import com.example.agentzengyu.superdownloader.R;
 import com.example.agentzengyu.superdownloader.app.SuperDownloaderApp;
-import com.example.agentzengyu.superdownloader.fragment.CurrentTaskFragment;
-import com.example.agentzengyu.superdownloader.fragment.HistoryTaskFragment;
-import com.example.agentzengyu.superdownloader.fragment.NewTaskFragment;
+import com.example.agentzengyu.superdownloader.fragment.CurrentFragment;
+import com.example.agentzengyu.superdownloader.fragment.HistoryFragment;
+import com.example.agentzengyu.superdownloader.fragment.NewFragment;
 import com.example.agentzengyu.superdownloader.fragment.SettingFragment;
 import com.example.agentzengyu.superdownloader.service.DownloadService;
 
@@ -24,14 +24,14 @@ import com.example.agentzengyu.superdownloader.service.DownloadService;
  * 主活动
  */
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
-    private SuperDownloaderApp superDownloaderApp = null;
+    private SuperDownloaderApp app = null;
     protected DownloadService.ServiceBinder binder;
-    private ServiceConnection serviceConnection;
+    private ServiceConnection connection;
     private FragmentManager fragmentManager;
 
-    private NewTaskFragment newTaskFragment;
-    private CurrentTaskFragment currentTaskFragment;
-    private HistoryTaskFragment historyTaskFragment;
+    private NewFragment newFragment;
+    private CurrentFragment currentFragment;
+    private HistoryFragment historyFragment;
     private SettingFragment settingFragment;
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(serviceConnection);
+        unbindService(connection);
     }
 
     /**
@@ -63,9 +63,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * 初始化碎片
      */
     private void initFragment() {
-        newTaskFragment = new NewTaskFragment();
-        currentTaskFragment = new CurrentTaskFragment();
-        historyTaskFragment = new HistoryTaskFragment();
+        newFragment = new NewFragment();
+        currentFragment = new CurrentFragment();
+        historyFragment = new HistoryFragment();
         settingFragment = new SettingFragment();
     }
 
@@ -73,8 +73,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * 设置变量
      */
     private void setVariable() {
-        superDownloaderApp = (SuperDownloaderApp) getApplication();
-        superDownloaderApp.addActivityToList(this);
+        app = (SuperDownloaderApp) getApplication();
+        app.addActivity(this);
         setService();
         fragmentManager = getSupportFragmentManager();
     }
@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      * 设置服务
      */
     public void setService() {
-        serviceConnection = new ServiceConnection() {
+        connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 binder = (DownloadService.ServiceBinder) service;  //获取其实例
@@ -95,28 +95,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         };
         Intent intent = new Intent(MainActivity.this, DownloadService.class);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (v.getId()) {
             case R.id.btnNew:
-                fragmentTransaction.replace(R.id.container, newTaskFragment);
-                fragmentTransaction.commit();
+                transaction.replace(R.id.container, newFragment);
+                transaction.commit();
                 break;
             case R.id.btnCurrent:
-                fragmentTransaction.replace(R.id.container, currentTaskFragment);
-                fragmentTransaction.commit();
+                transaction.replace(R.id.container, currentFragment);
+                transaction.commit();
                 break;
             case R.id.btnHistory:
-                fragmentTransaction.replace(R.id.container, historyTaskFragment);
-                fragmentTransaction.commit();
+                transaction.replace(R.id.container, historyFragment);
+                transaction.commit();
                 break;
             case R.id.btnSetting:
-                fragmentTransaction.replace(R.id.container, settingFragment);
-                fragmentTransaction.commit();
+                transaction.replace(R.id.container, settingFragment);
+                transaction.commit();
                 break;
             default:
                 break;
