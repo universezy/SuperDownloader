@@ -89,7 +89,7 @@ public class DownloadService extends Service {
             request.setTitle(objectName);
             request.setDescription("SuperDownload");
             request.setVisibleInDownloadsUi(true);
-            request.setDestinationInExternalPublicDir("/superdownload/",objectName);
+            request.setDestinationInExternalPublicDir("/superdownload/", objectName);
             long downloadID = manager.enqueue(request);
             Toast.makeText(getApplicationContext(), "Start to download: " + objectName, Toast.LENGTH_SHORT).show();
 
@@ -98,7 +98,6 @@ public class DownloadService extends Service {
             cursor = manager.query(query);
             CurrentItem currentItem = new CurrentItem();
             currentItem.setID(downloadID);
-            currentItem.setPath(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
             int indexTitle;
             if ((indexTitle = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE)) >= 0) {
                 String title = "", temp;
@@ -107,7 +106,7 @@ public class DownloadService extends Service {
                 currentItem.setName(title);
             }
             addCurrentItem(currentItem);
-            getProgress(query, currentItem, true, true);
+            getProgress(query, currentItem, true, true, true);
         } catch (IllegalArgumentException e) {
             Toast.makeText(getApplicationContext(), "Wrong url.", Toast.LENGTH_SHORT).show();
         } finally {
@@ -167,23 +166,33 @@ public class DownloadService extends Service {
      *
      * @param item 下载任务
      */
-    public void getProgress(final DownloadManager.Query query, final CurrentItem item, final boolean checkCurrentSize, final boolean checkTotalSize) {
+    public void getProgress(final DownloadManager.Query query, final CurrentItem item, final boolean checkCurrentSize, final boolean checkTotalSize, final boolean checkPath) {
         query.setFilterById(item.getID());
         final Cursor cursor = manager.query(query);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 long currentSize = 0, total = -1;
+                String path = null;
                 if (cursor.moveToFirst()) {
                     currentSize = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                     total = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    path = cursor.getString(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI));
                 }
                 int progress = (int) (currentSize * 100 / total);
-                boolean nextCheckCurrentSize = true, nextCheckTotalSize = true;
+                boolean nextCheckCurrentSize = true, nextCheckTotalSize = true, nextCheckPath = true;
                 if (checkTotalSize) {
-                    if (total > 0) {
+                    if (path != null && !"".equals(path)) {
                         setSize(item, total);
                         nextCheckTotalSize = false;
+                    }
+                } else {
+                    nextCheckTotalSize = false;
+                }
+                if (checkPath) {
+                    if (total > 0) {
+                        setPath(item, path);
+                        nextCheckPath = false;
                     }
                 } else {
                     nextCheckTotalSize = false;
@@ -196,7 +205,10 @@ public class DownloadService extends Service {
                         return;
                     }
                 }
-                getProgress(query, item, nextCheckCurrentSize, nextCheckTotalSize);
+                Intent intent = new Intent(Config.SERVICE);
+                intent.putExtra(Config.SUPERDOWNLOAD, Config.CURRENT);
+                sendBroadcast(intent);
+                getProgress(query, item, nextCheckCurrentSize, nextCheckTotalSize, nextCheckPath);
                 if (cursor != null) {
                     cursor.close();
                 }
@@ -209,6 +221,13 @@ public class DownloadService extends Service {
         int index = currentItems.indexOf(item);
         if (index >= 0) {
             currentItems.get(index).setSize(size);
+        }
+    }
+
+    public void setPath(CurrentItem item, String path) {
+        int index = currentItems.indexOf(item);
+        if (index >= 0) {
+            currentItems.get(index).setPath(path);
         }
     }
 
