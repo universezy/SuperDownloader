@@ -14,6 +14,8 @@ Android provide a API called **DownloadManager**, so I nearly didn't spend time 
 
 [About BitTorrent](http://baike.baidu.com/item/%E5%AF%B9%E7%AD%89%E7%BD%91%E7%BB%9C/5482934?fromtitle=p2p&fromid=139810)
 
+----
+
 ## Screenshot
 
 ### **New**
