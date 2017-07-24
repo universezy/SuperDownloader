@@ -20,7 +20,7 @@ Android provide a API called **DownloadManager**, so I nearly didn't spend time 
 
 ### **New**
 
-***Here I inset a browser page, so you can browse meanwhile download.***
+***Here I insert a browser page, so you can browse meanwhile download.***
 
 ![](https://github.com/13608089849/SuperDownloader/blob/master/image/new.jpeg)
 
