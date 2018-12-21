@@ -22,16 +22,16 @@ Android provide a API called **DownloadManager**, so I nearly didn't spend time 
 
 ***Here I insert a browser page, so you can browse meanwhile download.***
 
-![](https://github.com/frogfans/SuperDownloader/blob/master/image/new.jpeg)
+![](image/new.jpeg?raw=true)
 
 ### **Current**
 
 ***The list of current downloading tasks.***
 
-![](https://github.com/frogfans/SuperDownloader/blob/master/image/current.jpeg)
+![](image/current.jpeg?raw=true)
 
 ### **History**
 
 ***The list of historical downloaded tasks.***
 
-![](https://github.com/frogfans/SuperDownloader/blob/master/image/history.jpeg)
+![](image/history.jpeg?raw=true)
